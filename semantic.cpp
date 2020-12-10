@@ -1,6 +1,6 @@
 #include "semantic.h"
 extern  double Parameter,Origin_x, Origin_y,Scale_x, Scale_y,Rot_angle;
-
+extern int Color_R , Color_G , Color_B ;
 double GetExprValue(struct ExprNode* root);//获得表达式的值
 void DrawLoop(double Start, double End, double Step, struct ExprNode* HorPtr, struct ExprNode* VerPtr);//图形绘制
 void DelExprTree(struct ExprNode* root);//删除一棵树
@@ -37,7 +37,7 @@ void DrawLoop(double Start,   //起始
 	for (Parameter = Start; Parameter <= End; Parameter += Step)//把T在范围内的每一个值带入计算
 	{
 		CalcCoord(HorPtr, VerPtr, x, y);  //计算要绘制点的实际坐标
-		putpixel((int)x, (int)y, RGB(250, 250, 250));  //绘制这个点
+		putpixel((int)x, (int)y, RGB(Color_R, Color_G, Color_B));  //绘制这个点
 	}
 }
 

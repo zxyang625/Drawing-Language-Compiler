@@ -3,7 +3,7 @@
 int main()
 {
 	initgraph(720, 640);
-	Parser((char*)"draw2.txt");
+	Parser((char*)"draw.txt");
 	Sleep(3000);
 	closegraph();
 	return 0; 

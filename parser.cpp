@@ -6,7 +6,8 @@ OriginStatement->ORIGIN IS L_BRACKET Expression COMMA Expression R_BRACKET
 ScaleStatement->SCALE IS L_BRACKET Expression COMMA Expression R_BRACKET
 RotStatement->ROT IS Expression
 ForStatement->FOR T FROM Expression TO Expression TO Expression STEP Expression DRAW L_BRACKET Expression COMMA Expression R_BRACKET
-ColorStatement->COLOR IS BLUE|GREEN|RED
+ColorStatement->COLOR IS BLUE|GREEN|RED|(Expression,Expression,Expression)
+PixelSizeStatement->PIXELSIZE IS CONST_ID
 
 Expression->Term{ (PLUS|MINUS) Term }
 Term->Factor{ (MUL|DIV) Factor}
@@ -20,6 +21,7 @@ Atom->CONST_ID | T | FUNC L_BRACKET Expression R_BRACKET | L_BRACKET Expression 
 #include "semantic.h"
 
 double Parameter = 0, Origin_x = 0, Origin_y = 0, Scale_x = 1, Scale_y = 1, Rot_angle = 0;//Parameter是参数T的存储空间：记录T每次加一点的变化
+int Color_R = 250, Color_G = 250, Color_B = 250;
 static Token token;//记号
 static void FetchToken();//调用词法分析器的GetToken，把得到的当前记录保存起来。如果得到的记号是errtoken，则指出一个语法错误
 static void MatchToken(enum Token_Type AToken);//匹配当前记号
@@ -35,6 +37,7 @@ static void OriginStatement();
 static void RotStatement();
 static void ScaleStatement();
 static void ForStatement();
+static void ColorStatement();
 
 //第2类语法分析+构造语法树，因此表达式均设计为返回值为指向语法树节点的指针的函数。
 static struct ExprNode* Expression();//处理加减
@@ -161,13 +164,14 @@ static void Statement()
     case SCALE:   ScaleStatement(); break;
     case ROT:   RotStatement(); break;
     case FOR:   ForStatement(); break;
+    case COLOR:  ColorStatement(); break;
     default:   SyntaxError(2);//不符合的就提示错误信息
     }
     printf("Exit from Statement");
 }
 
 
-//----------OriginStatement的递归子程序
+//OriginStatement的递归子程序
 //OriginStatement->ORIGIN IS L_BRACKET Expression COMMA Expression R_BRACKET
 //eg:origin is (20, 200);
 static void OriginStatement(void)
@@ -262,6 +266,39 @@ static void ForStatement()
     DelExprTree(x_ptr);                             //释放横坐标语法树所占空间
     DelExprTree(y_ptr);                             //释放纵坐标语法树所占空间
     printf("Exit from For Statement\n");
+}
+
+//COLOR的子程序，遇到BLUE,GREEN,RED修改RGB(r,g,b)的值
+//ColorStatement->COLOR IS BLUE|GREEN|RED|(Expression,Expression,Expression)
+static void ColorStatement()
+{
+    Token_Type token_tmp;
+    struct ExprNode* value_ptr;
+    MatchToken(COLOR); call_match((char*)"COLOR");
+    MatchToken(IS); call_match((char*)"IS");
+    switch (token.type)
+    {//颜色分为两类
+     //第一类直接指定颜色（红，绿，蓝）
+    case red:Color_R = 255; Color_B = 0; Color_G = 0; MatchToken(token.type);call_match((char*)"RED");break;
+    case green:Color_R = 0; Color_B = 0; Color_G = 255;MatchToken(token.type);call_match((char*)"GREEN");break;
+    case blue:Color_R = 0; Color_B = 255; Color_G = 0; MatchToken(token.type);call_match((char*)"BLUE");break;
+    //第二类通过RGB（r,g,b）定义颜色
+    case L_BRACKET:
+        MatchToken(L_BRACKET);
+        value_ptr = Expression();
+        Color_R = GetExprValue(value_ptr);
+        MatchToken(COMMA);
+        value_ptr = Expression();
+        Color_G = GetExprValue(value_ptr);
+        MatchToken(COMMA);
+        value_ptr = Expression();
+        Color_B = GetExprValue(value_ptr);
+        MatchToken(R_BRACKET);
+        printf(" (%d,%d,%d)\n",Color_R,Color_G,Color_B);
+        break;
+    default: break;
+    }
+    printf("Exit from Color Statement\n");
 }
 
 //Expression的递归子程序,表达式应该是由正负号或无符号开头、由若干个项以加减号连接而成。

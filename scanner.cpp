@@ -33,6 +33,10 @@ char* GetEnum(int i)//判断Enum的值，返回对应名称
 	case 20:strcpy(name, "CONST_ID"); break;
 	case 21:strcpy(name, "NONTOKEN"); break;
 	case 22:strcpy(name, "ERRTOKEN"); break;
+	case 23:strcpy(name, "COLOR"); break;
+	case 24:strcpy(name, "BLUE"); break;
+	case 25:strcpy(name, "GREEN"); break;
+	case 26:strcpy(name, "RED"); break;
 	}
 	return name;
 }

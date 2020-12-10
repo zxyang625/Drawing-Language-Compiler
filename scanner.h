@@ -11,14 +11,15 @@
 #include <math.h>
 enum Token_Type  //枚举记号的类别
 {
-	ORIGIN, SCALE, ROT, IS, TO, STEP, DRAW, FOR, FROM, COLOR, BLUE, GREEN, RED,  //保留字
+	ORIGIN, SCALE, ROT, IS, TO, STEP, DRAW, FOR, FROM,   //保留字
 	T,  //参数
 	SEMICO, L_BRACKET, R_BRACKET, COMMA,  //分隔符
 	PLUS, MINUS, MUL, DIV, POWER,         //运算符
 	FUNC,      //函数
 	CONST_ID,  //常数
 	NONTOKEN,  //空记号
-	ERRTOKEN   //出错记号
+	ERRTOKEN, //出错记号
+	COLOR, blue, green, red
 };
 
 typedef double(*MathFuncPtr) (double);
@@ -52,9 +53,9 @@ static Token TokenTab[] =//符号表（字典）：数组元素的类型于记号的类型相同
 { STEP,        (char*)"STEP",       0.0,        NULL },
 { DRAW,        (char*)"DRAW",      0.0,        NULL },
 { COLOR ,      (char*)"COLOR",     0.0,         NULL},
-{ BLUE,        (char*)"BLUE",     0.0,         NULL,},
-{ GREEN,       (char*)"GREEN",     0.0,         NULL,},
-{ RED,        (char*)"RED",     0.0,         NULL,}
+{ blue,        (char*)"BLUE",       0.0,       NULL,},
+{ green,       (char*)"GREEN",     0.0,         NULL,},
+{ red,         (char*)"RED",        0.0,        NULL,}
 };
 
 extern char* GetEnum(int i);
