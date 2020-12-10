@@ -1,0 +1,51 @@
+// this is comment
+
+//pixsize is 5;
+
+rot IS 0;
+
+scale is (20, 20);
+ORIGIN IS (20,120);
+color is red;
+FOR T FROM 0 TO 2*PI+PI/50 STEP PI/50 DRAW(T, sin(T));
+ORIGIN IS (20, 160);
+color is blue;
+FOR T FROM 0 TO 2*PI+PI/50 STEP PI/50 DRAW(T, sin(T));
+ORIGIN IS (20, 200);
+color is (0, 255, 0);
+FOR T FROM 0 TO 2*PI+PI/50 STEP PI/50 DRAW(T, sin(T));
+
+ORIGIN IS (380,240);
+SCALE IS(80,80/3);
+COLOR is (0, 255, 255); // cyan
+ROT IS PI/2+0*PI/3;
+FOR T FROM -PI TO PI STEP PI/50 DRAW (cos(T), sin(T));
+COLOR is (0, 100, 0); // dark-green
+ROT IS PI/2+2*PI/3;
+FOR T FROM -PI TO PI STEP PI/50 DRAW (cos(T), sin(T));
+COLOR is (173, 255, 47); // green-yellow
+ROT IS PI/2-2*PI/3;
+FOR T FROM -PI TO PI STEP PI/50 DRAW (cos(T), sin(T));
+
+--/*
+--	this is comment too.
+--*/
+--- this is comment too.
+
+////ORIGIN IS(580,240);
+////SCALE IS (80,80);
+--ORIGIN IS(700,500);
+SCALE IS (200,200);
+ROT IS 0;
+color is (255, 0, 255);  // Magenta
+FOR T FROM 0 TO 2*PI STEP PI/50 DRAW(cos(T), sin(T));
+
+color is (210, 105, 30);  // Chocolate
+color is (128, 0, 128);  // Purple
+FOR T FROM 0 TO PI*20 STEP PI/50
+DRAW
+(
+    (1-1/(10/7)) * cos(T) + 1/(10/7)*cos(-T*((10/7)-1)),
+    (1-1/(10/7)) * sin(T) + 1/(10/7)*sin(-T*(10/7-1))
+);
+
