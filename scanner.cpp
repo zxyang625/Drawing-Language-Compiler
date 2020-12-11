@@ -37,6 +37,7 @@ char* GetEnum(int i)//判断Enum的值，返回对应名称
 	case 24:strcpy(name, "BLUE"); break;
 	case 25:strcpy(name, "GREEN"); break;
 	case 26:strcpy(name, "RED"); break;
+	case 27:strcpy(name, "PIXELSIZE"); break;
 	}
 	return name;
 }

@@ -1,8 +1,9 @@
 #include "semantic.h"
 extern  double Parameter,Origin_x, Origin_y,Scale_x, Scale_y,Rot_angle;
-extern int Color_R , Color_G , Color_B ;
+extern int Color_R , Color_G , Color_B , pixelsize ;
 double GetExprValue(struct ExprNode* root);//获得表达式的值
 void DrawLoop(double Start, double End, double Step, struct ExprNode* HorPtr, struct ExprNode* VerPtr);//图形绘制
+void Exputpixel(int x, int y, COLORREF color, int psize);
 void DelExprTree(struct ExprNode* root);//删除一棵树
 static void CalcCoord(struct ExprNode* Hor_Exp, struct ExprNode* Ver_Exp, double& Hor_x, double& Ver_y);//计算点的坐标
 
@@ -31,15 +32,19 @@ void DrawLoop(double Start,   //起始
 	double End,               //终止
 	double Step,              //步长
 	struct ExprNode* HorPtr,  //横坐标表达式语法树的根节点
-	struct ExprNode* VerPtr)  //纵坐标表达式语法树的根节点
+	struct ExprNode* VerPtr ) //纵坐标表达式语法树的根节点
 {
 	double x, y;
 	for (Parameter = Start; Parameter <= End; Parameter += Step)//把T在范围内的每一个值带入计算
 	{
 		CalcCoord(HorPtr, VerPtr, x, y);  //计算要绘制点的实际坐标
-		putpixel((int)x, (int)y, RGB(Color_R, Color_G, Color_B));  //绘制这个点
+		//putpixel((int)x, (int)y, RGB(Color_R, Color_G, Color_B));  //绘制这个点
+		//Exputpixel(x, y, RGB(Color_R, Color_G, Color_B), pixelsize);
+		setfillcolor(RGB(Color_R, Color_G, Color_B));//处理pixelsize，所以可以通过画圆来作为改变的像素
+		solidcircle(x, y, int(pixelsize/2));//圆的半径应该设为像素大小的一半
 	}
 }
+
 
 //计算表达式的值
 double  GetExprValue(struct ExprNode* root)  //参数是表达式的根

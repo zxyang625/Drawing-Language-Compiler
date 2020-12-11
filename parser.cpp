@@ -7,7 +7,7 @@ ScaleStatement->SCALE IS L_BRACKET Expression COMMA Expression R_BRACKET
 RotStatement->ROT IS Expression
 ForStatement->FOR T FROM Expression TO Expression TO Expression STEP Expression DRAW L_BRACKET Expression COMMA Expression R_BRACKET
 ColorStatement->COLOR IS BLUE|GREEN|RED|(Expression,Expression,Expression)
-PixelSizeStatement->PIXELSIZE IS CONST_ID
+PixSizeStatement->PIXELSIZE IS CONST_ID
 
 Expression->Term{ (PLUS|MINUS) Term }
 Term->Factor{ (MUL|DIV) Factor}
@@ -21,7 +21,7 @@ Atom->CONST_ID | T | FUNC L_BRACKET Expression R_BRACKET | L_BRACKET Expression 
 #include "semantic.h"
 
 double Parameter = 0, Origin_x = 0, Origin_y = 0, Scale_x = 1, Scale_y = 1, Rot_angle = 0;//Parameter是参数T的存储空间：记录T每次加一点的变化
-int Color_R = 250, Color_G = 250, Color_B = 250;
+int Color_R = 250, Color_G = 250, Color_B = 250,pixelsize=1;//红色，绿色，蓝色参数值，还有像素点大小
 static Token token;//记号
 static void FetchToken();//调用词法分析器的GetToken，把得到的当前记录保存起来。如果得到的记号是errtoken，则指出一个语法错误
 static void MatchToken(enum Token_Type AToken);//匹配当前记号
@@ -38,6 +38,7 @@ static void RotStatement();
 static void ScaleStatement();
 static void ForStatement();
 static void ColorStatement();
+static void PixSizeStatement();
 
 //第2类语法分析+构造语法树，因此表达式均设计为返回值为指向语法树节点的指针的函数。
 static struct ExprNode* Expression();//处理加减
@@ -165,6 +166,7 @@ static void Statement()
     case ROT:   RotStatement(); break;
     case FOR:   ForStatement(); break;
     case COLOR:  ColorStatement(); break;
+    case size: PixSizeStatement(); break;
     default:   SyntaxError(2);//不符合的就提示错误信息
     }
     printf("Exit from Statement");
@@ -300,6 +302,21 @@ static void ColorStatement()
     }
     printf("Exit from Color Statement\n");
 }
+//PixelSize子程序，用来设置像素点大小
+//PixSizeStatement->PIXELSIZE IS CONST_ID
+static void PixSizeStatement()
+{
+    Token_Type tmp;
+    MatchToken(size); call_match((char*)"PIXELSIZE");
+    MatchToken(IS); call_match((char*)"IS");
+    if (token.type == CONST_ID)
+    {
+        tmp = token.type;
+        pixelsize = (int)token.value;
+    }
+    MatchToken(token.type); call_match(GetEnum(tmp));
+    printf("Exit from PixelSize Statement\n");
+}
 
 //Expression的递归子程序,表达式应该是由正负号或无符号开头、由若干个项以加减号连接而成。
 //把函数设计为语法树节点的指针，在函数内引进2个语法树节点的指针变量，分别作为Expression左右操作数（Term）的语法树节点指针
@@ -310,7 +327,7 @@ static struct ExprNode* Expression()    //展开右部，并且构造语法树
     Token_Type token_tmp;     //当前记号种类
     printf("Enter in Expression\n");
     left = Term();     //分析左操作数且得到其语法树
-    while (token.type == PLUS || token.type == MINUS)
+    while (token.type == PLUS || token.type == MINUS)//必须要使用while判断，因为存在表达式中有两个项以上加减的情况。用if将会只判断一次
     {
         token_tmp = token.type;
         MatchToken(token_tmp);
@@ -329,7 +346,7 @@ static struct ExprNode* Term()
     struct ExprNode* left, * right;
     Token_Type token_tmp;
     left = Factor();
-    while(token.type == MUL || token.type == DIV)
+    while(token.type == MUL || token.type == DIV)//必须要使用while判断，因为存在表达式中有两个项以上乘除的情况。用if将会只判断一次
     {
         token_tmp = token.type;
         MatchToken(token_tmp);

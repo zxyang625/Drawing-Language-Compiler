@@ -19,7 +19,8 @@ enum Token_Type  //枚举记号的类别
 	CONST_ID,  //常数
 	NONTOKEN,  //空记号
 	ERRTOKEN, //出错记号
-	COLOR, blue, green, red
+	COLOR, blue, green, red,
+	size
 };
 
 typedef double(*MathFuncPtr) (double);
@@ -53,9 +54,10 @@ static Token TokenTab[] =//符号表（字典）：数组元素的类型于记号的类型相同
 { STEP,        (char*)"STEP",       0.0,        NULL },
 { DRAW,        (char*)"DRAW",      0.0,        NULL },
 { COLOR ,      (char*)"COLOR",     0.0,         NULL},
-{ blue,        (char*)"BLUE",       0.0,       NULL,},
-{ green,       (char*)"GREEN",     0.0,         NULL,},
-{ red,         (char*)"RED",        0.0,        NULL,}
+{ blue,        (char*)"BLUE",       0.0,       NULL },
+{ green,       (char*)"GREEN",     0.0,         NULL },
+{ red,         (char*)"RED",        0.0,        NULL },
+{ size,        (char*)"PIXELSIZE",  0.0,       NULL }
 };
 
 extern char* GetEnum(int i);

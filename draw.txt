@@ -1,6 +1,6 @@
 // this is comment
 
-//pixsize is 5;
+pixelsize is 5;
 
 rot IS 0;
 
