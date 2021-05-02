@@ -1,5 +1,5 @@
 ---- ¥Û‘≤
-pixsize is 10;
+pixsize is 20;
 color is (255,0,0); //red
 origin is (250,250);
 scale is (200,200);
